@@ -17,6 +17,8 @@
   },
   "homepage": "https://github.com/CyrusRoshan/ryuu#readme",
   "dependencies": {
-    "robotjs": "^0.4.5"
+    "bluetooth-serial-port": "^2.1.0",
+    "robotjs": "^0.4.5",
+    "serialport": "^4.0.3"
   }
 }
