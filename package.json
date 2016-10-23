@@ -1,0 +1,19 @@
+{
+  "name": "ryuu",
+  "version": "1.0.0",
+  "description": "hanzo simulator 2k16",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/CyrusRoshan/ryuu.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/CyrusRoshan/ryuu/issues"
+  },
+  "homepage": "https://github.com/CyrusRoshan/ryuu#readme"
+}
