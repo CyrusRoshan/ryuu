@@ -3,13 +3,11 @@
 
 const SerialPort = require('serialport');
 const robot = require('robotjs');
-// const btSerial = new (require('bluetooth-serial-port')).BluetoothSerialPort();
 
 robot.setMouseDelay(10);
 
-const bluetoothAddress = '20-16-05-25-41-99';
 var arrowToggle = false;
-var mouseToggle = false;
+var currentlyShooting = false;
 
 SerialPort.list(function (err, ports) {
   ports.forEach(function(port) {
@@ -20,27 +18,37 @@ SerialPort.list(function (err, ports) {
 });
 
 try {
-  var port = new SerialPort('/dev/tty-usbserial1', function (err) {
+  var port = new SerialPort('COM3', function (err) {
     if (err) {
       return console.log('Error: ', err.message);
     }
     console.log('THE GATES HAVE BEEN OPENED');
 
+    var dataString = '';
     port.on('data', function (data) {
-      console.log(data);
+      data = data.toString('utf-8');
+      dataString += data;
+
+      if (!dataString.includes(']')) {
+        return;
+      }
+
       try {
-        var arr = JSON.parse(data);
+        var arr = JSON.parse(dataString);
+        console.log('WORKS', dataString);
         parseInput(arr);
       } catch (e) {
+        console.log('DOESNT WORK', dataString);
         console.log(e);
       }
+      dataString = '';
     });
   });
 } catch (e) {
   console.log(e);
 }
 
-
+var previouslyShooting = false;
 function parseInput(arr) {
   var x = Number(arr[0]);
   var y = Number(arr[1]);
@@ -49,11 +57,11 @@ function parseInput(arr) {
   var dragging = Number(arr[4]);
 
   var shooting = false;
-  if (dragging > 1000) {
+  if (dragging > 800) {
     shooting = true;
   }
 
-  moveMouse(x, y, shooting);
+  // moveMouse(x, y, shooting);
 
   if (arrowType) {
     if (arrowToggle) {
@@ -67,64 +75,42 @@ function parseInput(arr) {
   if (ult) {
     robot.keyTap('q');
   }
+
+  if (shooting) {
+    robot.mouseToggle("down");
+
+    setTimeout(function() {
+      robot.mouseToggle("up");
+    }, 1500);
+  }
 }
 
 function moveMouse(x, y, click) {
-  x = mapRange(x, 0, 496*2, 0, 2880);
-  y = mapRange(y, 0, 507*2, 1800, 0);
-  console.log(x, y);
-  console.log(mouseToggle);
-  robot.moveMouse(x, y);
+  // x = mapRange(x, 0, 496*2, -2800, 2880);
+  // y = mapRange(y, 0, 507*2, 1200, -1200);
+  //
+  //
+  // var mouse = robot.getMousePos();
+  // robot.dragMouse(mouse.x + x, mouse.y + y);
+  //
+  // console.log('----');
+  // console.log(x, y);
+  // console.log(mouse.x + x, mouse.y + y);
 
-  if (mouseToggle != click) {
-    robot.mouseToggle();
-    mouseToggle = click;
-  }
+  // if (x > 550) {
+  //   keyTap('numpad_6');
+  // } else if (x < 450) {
+  //   keyTap('numpad_4');
+  // }
+  //
+  // if (y > 550) {
+  //   keyTap('numpad_8');
+  // } else if (y < 450) {
+  //   keyTap('numpad_2');
+  // }
+
 }
 
 function mapRange(value, low1, high1, low2, high2) {
     return low2 + (high2 - low2) * (value - low1) / (high1 - low1);
 }
-
-// var rawSerialString = '';
-// btSerial.on('found', function(address, name) {
-//   if(address === bluetoothAddress) {
-//     process.stdout.write('Arduino found, connecting... ');
-//     btSerial.findSerialPortChannel(address, function(channel) {
-//         btSerial.connect(address, channel, function() {
-//             console.log('Done!');
-//
-//             btSerial.write(new Buffer('my data', 'utf-8'), function(err, bytesWritten) {
-//                 if (err) console.log(err);
-//             });
-//
-//             btSerial.on('data', function(data) {
-//               rawSerialString += data.toString('utf-8');
-//
-//               if (!rawSerialString.includes(']')) {
-//                 return;
-//               }
-//
-//               try {
-//                 var arr = JSON.parse(rawSerialString);
-//                 console.log(rawSerialString);
-//                 parseInput(arr);
-//               } catch (e) {
-//                 // console.log('DATA:', data.toString('utf-8'));
-//                 // console.log("TRANSMISSION ERROR:", e)
-//                 rawSerialString = '';
-//               }
-//             });
-//         }, function () {
-//             console.log('Connection Error Type 1');
-//         });
-//
-//         // close the connection when you're ready
-//         btSerial.close();
-//     }, function() {
-//         console.log('Connection Error Type 2');
-//     });
-//   }
-// });
-//
-// btSerial.inquire();
