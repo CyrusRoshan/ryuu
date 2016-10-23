@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/CyrusRoshan/ryuu/issues"
   },
-  "homepage": "https://github.com/CyrusRoshan/ryuu#readme"
+  "homepage": "https://github.com/CyrusRoshan/ryuu#readme",
+  "dependencies": {
+    "robotjs": "^0.4.5"
+  }
 }
