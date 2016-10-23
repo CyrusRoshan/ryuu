@@ -64,7 +64,9 @@ function parseInput(arr) {
 function moveMouse(x, y, click) {
   x = mapRange(x, 0, 496*2, 0, 2880);
   y = mapRange(y, 0, 507*2, 1800, 0);
-  robot.dragMouse(x, y);
+  console.log(x, y);
+  console.log(mouseToggle);
+  robot.moveMouse(x, y);
 
   if (mouseToggle != click) {
     robot.mouseToggle();
