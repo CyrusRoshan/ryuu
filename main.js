@@ -11,7 +11,6 @@ const bluetoothAddress = '20-16-05-25-41-99';
 var arrowToggle = false;
 var mouseToggle = false;
 
-var SerialPort = require('serialport');
 SerialPort.list(function (err, ports) {
   ports.forEach(function(port) {
     console.log(port.comName);
